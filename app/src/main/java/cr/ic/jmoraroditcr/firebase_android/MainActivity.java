@@ -30,6 +30,11 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     ArrayList<Item> items = new ArrayList<>();
     ListView list;
+
+    public void agregar_producto(View view){
+        Intent intent = new Intent(this, AgregarProducto.class);
+        startActivity(intent);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,8 +91,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
 
-                        /*
-                        Intent intent = new Intent(getApplicationContext(), ItemDetail.class);
+
+                        Intent intent = new Intent(getApplicationContext(), DetalleItem.class);
 
                         intent.putExtra("nombre", items.get(position).getNombre());
                         intent.putExtra("precio", items.get(position).getPrecio());
@@ -95,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                         intent.putExtra("foto", items.get(position).getFoto());
                         startActivity(intent);
 
-                        */
+
                     }
                 });
             }
@@ -106,15 +111,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
 }

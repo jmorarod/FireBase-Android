@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="cr.ic.jmoraroditcr.firebase_android.MainActivity">
+    tools:context="cr.ic.jmoraroditcr.firebase_android.AgregarProducto">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -20,7 +20,20 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/agregar_producto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="80dp"
+        android:layout_marginRight="20dp"
+        android:onClick="agregar_producto"
+        app:layout_anchor="@+id/include"
+        app:layout_anchorGravity="right|center"
+        app:srcCompat="@android:drawable/ic_input_add" />
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/content_agregar_producto" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -28,7 +41,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:onClick="agregar_producto"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        android:layout_marginRight="10dp"
+        android:onClick="cambiar_imagen"
+        app:srcCompat="@android:drawable/ic_menu_edit" />
+
 
 </android.support.design.widget.CoordinatorLayout>

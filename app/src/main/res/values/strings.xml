@@ -13,4 +13,5 @@
     <string name="permission_rationale">Debe de proveer permisos para realizar esta acción
     </string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_agregar_producto">AgregarProducto</string>
 </resources>
