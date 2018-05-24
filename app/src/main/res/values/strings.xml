@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">FireBase-Android</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Contraseña</string>
+    <string name="action_sign_in">Log in</string>
+    <string name="action_sign_in_short">Log in</string>
+    <string name="error_invalid_email">Correo no valido</string>
+    <string name="error_invalid_password">La contraseña es muy corta</string>
+    <string name="error_incorrect_password">La contraseña es incorrecta</string>
+    <string name="error_field_required">Debe llenar este campo</string>
+    <string name="permission_rationale">Debe de proveer permisos para realizar esta acción
+    </string>
+    <string name="title_activity_main">MainActivity</string>
+</resources>
