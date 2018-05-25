@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -51,11 +52,15 @@ public class AgregarProducto extends AppCompatActivity {
         String nombre = txtNombre.getText().toString();
         String description = txtDescripcion.getText().toString();
         String precio = txtPrecio.getText().toString();
-        String ID_Usuario = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
-        Item item = new Item(description, downloadPath.toString(), ID_Usuario, nombre, precio);
-        String id = Database.push().getKey();
-        Database.child(id).setValue(item);
-        startActivity(new Intent(AgregarProducto.this, MainActivity.class));
+        if(nombre != "" && description != "" && precio !="" && downloadPath != null ) {
+            String ID_Usuario = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
+            Item item = new Item(description, downloadPath.toString(), ID_Usuario, nombre, precio);
+            String id = Database.push().getKey();
+            Database.child(id).setValue(item);
+            startActivity(new Intent(AgregarProducto.this, MainActivity.class));
+        }else{
+            Toast.makeText(this,"Debe llenar todos los campos y cambiar la imagen",Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void cambiar_imagen(View view){

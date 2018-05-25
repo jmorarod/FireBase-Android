@@ -3,6 +3,8 @@ package cr.ic.jmoraroditcr.firebase_android;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -100,8 +102,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                String mEmail = mEmailView.getText().toString();
-                String mPassword = mPasswordView.getText().toString();
+                final String mEmail = mEmailView.getText().toString();
+                final String mPassword = mPasswordView.getText().toString();
                 mAuth.signInWithEmailAndPassword(mEmail, mPassword)
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
@@ -117,8 +119,32 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w("Sign in", "signInWithEmail:failure", task.getException());
-                                    Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
+                                    new AlertDialog.Builder(LoginActivity.this)
+                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                            .setTitle("Registrar usuario")
+                                            .setMessage("Desea Registrar este usuario?")
+                                            .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    mAuth.createUserWithEmailAndPassword(mEmail, mPassword)
+                                                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                                                    if (task.isSuccessful()) {
+                                                                        // Sign in success, update UI with the signed-in user's information
+                                                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                                                        startActivity(intent);
+
+                                                                    }
+                                                                }
+                                                            });
+
+
+
+                                                }
+                                            })
+                                            .setNegativeButton("No", null)
+                                            .show();
                                 }
 
                                 // ...

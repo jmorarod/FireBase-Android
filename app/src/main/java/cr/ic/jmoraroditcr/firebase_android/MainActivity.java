@@ -1,5 +1,7 @@
 package cr.ic.jmoraroditcr.firebase_android;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -18,6 +20,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -25,11 +28,13 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference("Productos");
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference myRef = database.getReference("Productos");
     private FirebaseAuth mAuth;
-    ArrayList<Item> items = new ArrayList<>();
-    ListView list;
+    private ArrayList<Item> items = new ArrayList<>();
+    private ListView list;
+    private ArrayAdapter adapter;
+    private ArrayList<String> productosString;
 
     public void agregar_producto(View view){
         Intent intent = new Intent(this, AgregarProducto.class);
@@ -43,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         list = findViewById(R.id.lista_productos);
         mAuth = FirebaseAuth.getInstance();
+
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -72,17 +78,17 @@ public class MainActivity extends AppCompatActivity {
 
                 }
                 Log.d("Debug","Hola");
-                String[] productosString = new String[items.size()];
+                productosString = new ArrayList<String>();
                 int i = 0;
                 for(Item item : items)
                 {
                     Log.d("For", item.getNombre());
-                    productosString[i] = item.getNombre();
+                    productosString.add(item.getNombre());
                     i++;
                 }
 
 
-                ArrayAdapter adapter = new ArrayAdapter<String>(MainActivity.this,
+                adapter = new ArrayAdapter<String>(MainActivity.this,
                         R.layout.list_layout, productosString);
                 list.setAdapter(adapter);
                 list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -101,6 +107,47 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
 
 
+                    }
+                });
+                list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                                                   final int pos, long id) {
+                        new AlertDialog.Builder(MainActivity.this)
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setTitle("Está seguro?")
+                                .setMessage("Desea eliminar el producto?")
+                                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Productos");
+                                        Query query = ref.orderByChild("nombre").equalTo(items.get(pos).getNombre());
+                                        Log.d("Producto a borrar",items.get(pos).getNombre());
+                                        Log.d("DebugAlertDialog","Antes del listener");
+                                        query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                                for (DataSnapshot productoSnapshot: dataSnapshot.getChildren()){
+                                                    Log.d("productoABorrar", productoSnapshot.getValue().toString());
+                                                    productoSnapshot.getRef().removeValue();
+                                                    productosString.remove(items.get(pos).getNombre());
+                                                    adapter.notifyDataSetChanged();
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+                                                Log.e("Canceled", "onCancelled", databaseError.toException());
+                                            }
+                                        });
+
+                                    }
+                                })
+                                .setNegativeButton("No", null)
+                                .show();
+
+                        return true;
                     }
                 });
             }
